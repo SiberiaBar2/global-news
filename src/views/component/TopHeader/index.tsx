@@ -16,8 +16,8 @@ const TopHeader: React.FC<{}> = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item> 超级管理员</Menu.Item>
-      <Menu.Item danger>退出</Menu.Item>
+      <Menu.Item key='1'> 超级管理员</Menu.Item>
+      <Menu.Item key='2' danger>退出</Menu.Item>
     </Menu>
   );
 
