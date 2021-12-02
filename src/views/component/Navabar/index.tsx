@@ -109,7 +109,6 @@ const Navabar: React.FC<{}> = () => {
         }
       })
       .catch((err: ResType) => {
-
         throw err
       })
   }, [])
@@ -153,7 +152,7 @@ const Navabar: React.FC<{}> = () => {
   // {renderMenu(menu)}
 
   // !初始展开的 SubMenu 菜单项 key 数组 初始展开，用ref组件重渲会再次被赋值
-  let openKeys = ['/' + nowLoacll.split('/')[1]]
+  let openKeys = ['/' + nowLoacll?.split('/')[1]]
   return (
     <Fragment>
       <Sider trigger={null} collapsible collapsed={collapsed}>

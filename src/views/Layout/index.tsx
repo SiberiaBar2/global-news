@@ -31,6 +31,7 @@ const Layouts: React.FC<{}> = () => {
               margin: '24px 16px',
               padding: 24,
               minHeight: 280,
+              overflow: 'auto'
             }}
           >
             <Suspense fallback={<div style={{ textAlign: 'center' }}><Spin size="large" /></div>}>
