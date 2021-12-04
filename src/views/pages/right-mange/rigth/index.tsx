@@ -2,8 +2,7 @@
 import React, { useState, useEffect, Fragment, ReactElement } from 'react'
 import axios from 'axios'
 import { Table, Tag, Modal, Button, Popover, Switch } from 'antd'
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ResType } from 'views/constants'
 
 const { confirm } = Modal;
