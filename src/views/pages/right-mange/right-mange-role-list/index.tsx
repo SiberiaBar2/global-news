@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Table, Modal, Button, Tree } from 'antd'
 import { ExclamationCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ResType } from 'views/constants'
-import { type } from 'os';
+import { ListType } from '../rigth'
 // Record 专注于对象和数组的键与键值
 // interface CommonType {
 //   list: Record<number, unknown>[] // 键值为number ，值类型为unknow, 指定对象或数组的键值与键值的类型
@@ -64,14 +64,39 @@ type Colmnustype = {
   render?: (value: string, record: any) => ReactElement
 }
 
+interface RoleType {
+  id: number,
+  rights: string[]
+  roleName: string
+  roleType: number
+}
+
+
+interface TreeType {
+  children: []
+  grade: number
+  id: number
+  key: string
+  pagepermisson: number
+  title: string
+}
+
+interface Sectype extends Pick<TreeType, 'grade' | 'id' | 'key'> {
+  rightId: number,
+  title: string
+}
+
+interface Keytype {
+  checked: React.Key[];
+  halfChecked: React.Key[];
+}
+
 
 const RoleList: React.FC<{}> = () => {
-  const [roleData, setRoleData] = useState([])
-  const [treeData, setTreeData] = useState([])
-  const [currentRights, setCurrentRights] = useState<{
-    checked: React.Key[];
-    halfChecked: React.Key[];
-  } | React.Key[]>([])
+  const [roleData, setRoleData] = useState<RoleType[]>([])
+  const [treeData, setTreeData] = useState<TreeType[]>([])
+  const [curId, setCurId] = useState<number>(0)
+  const [currentRights, setCurrentRights] = useState<Keytype | React.Key[]>([])
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
   useEffect(() => {
     axios({
@@ -106,23 +131,30 @@ const RoleList: React.FC<{}> = () => {
 
   const handleOk = () => {
     setIsModalVisible(false);
+    let copyData = treeData.map(item => {
+      if (item.id === curId) {
+        return {
+          ...item,
+          rights: currentRights
+        }
+      }
+      return item
+    })
+    setTreeData(copyData)
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
-  const onCheck = (checkedKeys: {
-    checked: React.Key[];
-    halfChecked: React.Key[];
-  } | React.Key[]) => {
-    console.log('onCheck', checkedKeys);
-    setCurrentRights(checkedKeys)
+  const onCheck = (checkedKeys: Keytype | React.Key[]) => {
+    console.log('onCheck', checkedKeys); // 为什么写成接口，就是check的值了
+    setCurrentRights((checkedKeys as Keytype).checked)
   };
   const columns: Colmnustype[] = [
     {
       title: 'ID',
-      dataIndex: 'id',
+      dataIndex: 'id',  
       render: (id) => <b>{id}</b>
     },
     {
@@ -144,6 +176,7 @@ const RoleList: React.FC<{}> = () => {
             shape="circle"
             onClick={() => {
               setIsModalVisible(true);
+              setCurId(record.id)
               setCurrentRights(record.rights)
             }}
             icon={<EditOutlined />} />
@@ -166,12 +199,12 @@ const RoleList: React.FC<{}> = () => {
   };
   const treeConfig = {
     checkable: true as true,
-    onCheck: onCheck,
+    onCheck: onCheck as (checkedKeys: Keytype | React.Key[]) => void,
     checkStrictly: true as true,  // 取消什么关联来着？
     checkedKeys: currentRights,   // checkedKeys 受控的，default 只有第一次生效
     treeData: treeData
   };
-  
+
   return (
     <Fragment>
       {/* {data.list.map(item => {

@@ -14,14 +14,13 @@ const { confirm } = Modal;
 // rightId: 2
 // title: "添加用户"
 
-interface ListType {
+export interface ListType {
   children: ListItemType[] | string
   grade: number
   id: number
   key: string
   pagepermisson: number
   title: string,
-  rightId?: number // 先耍个赖
 }
 
 interface ListItemType extends Pick<ListType, 'grade' | 'id' | 'key' | 'title'> {
@@ -63,7 +62,7 @@ const RigthList: React.FC<{}> = () => {
       })
   }, []);
 
-  const deleteMethod = (item: ListType) => {
+  const deleteMethod = (item: ListType | ListItemType) => {
     console.log('item', item)
     if (item.id === 1) {
       setTableData(() => {
@@ -71,8 +70,8 @@ const RigthList: React.FC<{}> = () => {
       })
       axios.delete(`http://localhost:5000/rights/${item.id}`)
     } else {
-      console.log('item.id', item.rightId)
-      let lists = tableData.filter(data => data.id === item.rightId)
+      console.log('item.id', (item as ListItemType).rightId)
+      let lists = tableData.filter(data => data.id === (item as ListItemType).rightId)
       lists[0].children = Array.isArray(lists[0].children) // lists[0].children as ListItemType[]  // 不知为何这种方式没用？？
         ? lists[0].children.filter(data => data.id !== item.id)  //若不 Array.isArray ，报错 string 不存在 filter方法
         : []
@@ -82,7 +81,7 @@ const RigthList: React.FC<{}> = () => {
       axios.delete(`http://localhost:5000/children/${item.id}`)
     }
   };
-  const handelConfilm = (item: ListType) => {
+  const handelConfilm = (item: ListType | ListItemType) => {
     confirm({
       title: 'Do you Want to delete these items?',
       icon: <ExclamationCircleOutlined />,
@@ -97,23 +96,23 @@ const RigthList: React.FC<{}> = () => {
     });
   };
 
-  const checkChange = (item: ListType) => {
-    item.pagepermisson = item.pagepermisson === 1 ? 0 : 1  // 为什么不呢个直接赋值
+  const checkChange = (item: ListType | ListItemType) => {
+    (item as ListType).pagepermisson = (item as ListType).pagepermisson === 1 ? 0 : 1  // 为什么不呢个直接赋值
     setTableData([...tableData])  // 为什么可以这样改，引用类型一改全改是什么意思
 
     // 同步后端
     if (item.grade === 1) { // 一级
       axios.patch(`http://localhost:5000/rights/${item.id}`, { // 补丁请求
-        pagepermisson: item.pagepermisson
+        pagepermisson: (item as ListType).pagepermisson
       })
     } else {     // 二级
       axios.patch(`http://localhost:5000/children/${item.id}`, {
-        pagepermisson: item.pagepermisson
+        pagepermisson: (item as ListType).pagepermisson
       })
     }
   };
 
-  const columns: ColumnsType<string, ListType, number>[] = [
+  const columns: ColumnsType<string, ListType | ListItemType, number>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -149,15 +148,15 @@ const RigthList: React.FC<{}> = () => {
             onClick={() => handelConfilm(record)} />
           <Popover
             content={<div style={{ textAlign: 'center' }} >
-              <Switch checked={record.pagepermisson === 1}
+              <Switch checked={(record as ListType ).pagepermisson === 1}
                 onChange={() => checkChange(record)} />
             </div>} title="配置项"
-            trigger={record.pagepermisson === undefined ? '' : 'click'}>
+            trigger={(record as ListType ).pagepermisson === undefined ? '' : 'click'}>
             <Button
               type="primary"
               shape="circle"
               icon={<EditOutlined />}
-              disabled={record.pagepermisson === undefined} />
+              disabled={(record as ListType ).pagepermisson === undefined} />
           </Popover>
         </Fragment>
       }
