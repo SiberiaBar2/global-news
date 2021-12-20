@@ -66,7 +66,7 @@ type Colmnustype = {
 
 interface RoleType {
   id: number,
-  rights: string[]
+  rights: Keytype | React.Key[]
   roleName: string
   roleType: number
 }
@@ -98,6 +98,7 @@ const RoleList: React.FC<{}> = () => {
   const [curId, setCurId] = useState<number>(0)
   const [currentRights, setCurrentRights] = useState<Keytype | React.Key[]>([])
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
+  // const [currentId, setCurrentId] = useState<number>(0)
   useEffect(() => {
     axios({
       url: 'http://localhost:5000/roles',
@@ -107,6 +108,7 @@ const RoleList: React.FC<{}> = () => {
         console.log('res', res)
         if (res.status === 200) {
           const list = res.data
+          console.log('list', list)
           setRoleData(list)
         }
       })
@@ -131,7 +133,7 @@ const RoleList: React.FC<{}> = () => {
 
   const handleOk = () => {
     setIsModalVisible(false);
-    let copyData = treeData.map(item => {
+    setRoleData(roleData.map(item => {
       if (item.id === curId) {
         return {
           ...item,
@@ -139,8 +141,11 @@ const RoleList: React.FC<{}> = () => {
         }
       }
       return item
+    }));
+    // 同步后端
+    axios.patch(`http://localhost:5000/roles/${curId}`, {
+      rights: currentRights
     })
-    setTreeData(copyData)
   };
 
   const handleCancel = () => {
@@ -154,7 +159,7 @@ const RoleList: React.FC<{}> = () => {
   const columns: Colmnustype[] = [
     {
       title: 'ID',
-      dataIndex: 'id',  
+      dataIndex: 'id',
       render: (id) => <b>{id}</b>
     },
     {
@@ -178,6 +183,7 @@ const RoleList: React.FC<{}> = () => {
               setIsModalVisible(true);
               setCurId(record.id)
               setCurrentRights(record.rights)
+              // setCurrentId(record.id)
             }}
             icon={<EditOutlined />} />
         </Fragment>
