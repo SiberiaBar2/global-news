@@ -159,7 +159,7 @@ const Navabar: React.FC<{}> = () => {
         <div style={{ display: 'flex', height: "100%", flexDirection: 'column' }}>
           <div className={cx('logo')} >全球新闻发布管理系统</div>
           <div style={{ flex: 1, overflow: 'auto' }}>
-            {console.log('nowLoactionRef', nowLoactionRef.current)}
+            {/* {console.log('nowLoactionRef', nowLoactionRef.current)} */}
             <Menu theme="dark" mode="inline" selectedKeys={[nowLoacll]} defaultOpenKeys={openKeys}>
               {renderMenu(menu)}
             </Menu>

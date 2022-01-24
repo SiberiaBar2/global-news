@@ -27,7 +27,7 @@ const RouterView = ({
           }
           return <Route key={item.path} path={item.path} element={< item.component />} />
         })}
-      </Routes>
+      </Routes> 
     </Fragment>
   )
 }
