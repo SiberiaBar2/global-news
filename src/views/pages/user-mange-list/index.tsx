@@ -7,6 +7,7 @@ import { ResType } from 'views/constants'
 import UserForm from 'views/component/UserForm';
 
 const { confirm } = Modal;
+
 export interface ListType {
   children: ListItemType[] | string
   grade: number
@@ -67,7 +68,7 @@ const UserList: React.FC<{}> = () => {
       .then((value: any) => {
         console.log('value', value)
         setIsModalVisible(false);
-
+        userFormRef.current.resetFields();
         axios.post('http://localhost:5000/users', {
           ...value,
           roleState: true,
@@ -75,7 +76,10 @@ const UserList: React.FC<{}> = () => {
         })
           .then((res: any) => {
             console.log('res.dtat', res.data)
-            setTableData([...tableData, res.data]);
+            setTableData([...tableData, {
+              ...res.data,// 用传入的这个roleId和角色接口的id去对比拿到其中一项，并把这一项放入新增加的对象中
+              role: roleList.filter(item => item.id === value.roleId)[0]
+            }]);
           })
       })
       .catch((err: any) => {
@@ -96,6 +100,7 @@ const UserList: React.FC<{}> = () => {
         console.log('res', res)
         if (res.status === 200) {
           const list = res.data as ListType[]
+          console.log('list-》》》》》》》》》》》》》', list)
           list.forEach(item => {  // forEach操作外部数据
             if (item.children?.length === 0) {
               list[0].children = ''
@@ -134,7 +139,9 @@ const UserList: React.FC<{}> = () => {
 
   const deleteMethod = (item: ListType | ListItemType) => {
     console.log('item', item)
+    setTableData(tableData.filter(data => data.id !== item.id));
 
+    axios.delete(`http://localhost:5000/users/${item.id}`);
   };
   const handelConfilm = (item: ListType | ListItemType) => {
     confirm({
@@ -150,6 +157,27 @@ const UserList: React.FC<{}> = () => {
       },
     });
   };
+
+  const handeleSwitch = (record: ListType | ListItemType) => {
+    console.warn('record', record);// 不加; 就报错是什么问题，没有调用签名
+    (record as ListItemType ).roleState = !(record as ListItemType ).roleState;
+    setTableData([...tableData]);
+    // 同步后端
+    axios.patch(`http://localhost:5000/users/${(record as ListItemType ).id}`, {
+      roleState: (record as ListItemType ).roleState
+    })
+  };
+
+  const handelUpdate = (record: ListType | ListItemType) => {
+    setIsModalVisible(true);
+    console.log('userFormRef',userFormRef)
+    try {
+      userFormRef.current.setFieldsValue(record);
+    }
+    catch(err) {
+      console.error(err);
+    }
+  }
 
   const columns:
     ColumnsType<string | boolean | any,
@@ -167,7 +195,7 @@ const UserList: React.FC<{}> = () => {
         title: '角色名称',
         dataIndex: 'role',
         render: (role) => {
-          return role?.roleName
+          return role.roleName
         }
       },
       {
@@ -181,9 +209,12 @@ const UserList: React.FC<{}> = () => {
         title: '用户状态',
         dataIndex: 'roleState',
         render: (roleState, record) => {
-          return <Switch
+          return (
+            <Switch
             checked={roleState}
+            onChange={() => handeleSwitch(record)}
             disabled={(record as ListItemType).default}></Switch>
+          )
         }
       },
       {
@@ -201,6 +232,7 @@ const UserList: React.FC<{}> = () => {
               type="primary"
               shape="circle"
               disabled={(record as ListItemType).default}
+              onClick={() => handelUpdate(record)}
               icon={<EditOutlined />} />
           </Fragment>
         }
