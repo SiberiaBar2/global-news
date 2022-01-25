@@ -31,20 +31,28 @@ const UserForm = (props: UserFormType, ref: any) => {
       <Form.Item
         name='username'
         label="用户名"
+<<<<<<< HEAD
         rules={[{
           required: true,
           message: 'please input the value'
         }]} // 校验这里也是可以写正则的
+=======
+        rules={[{ required: true, message: 'please input the value' }]} // 校验这里也是可以写正则的
+>>>>>>> 4c0b3272b92a6f8c40846e5c7c55c07ec7b93425
       >
         <Input />
       </Form.Item>
       <Form.Item
         name='password'
         label="密码"
+<<<<<<< HEAD
         rules={[{
           required: true,
           message: 'please input the value'
         }]}
+=======
+        rules={[{ required: true, message: 'please input the value' }]}
+>>>>>>> 4c0b3272b92a6f8c40846e5c7c55c07ec7b93425
       >
         <Input />
       </Form.Item>
@@ -53,10 +61,14 @@ const UserForm = (props: UserFormType, ref: any) => {
         label="区域"
         rules={isDisable// 禁用没有校验
           ? []
+<<<<<<< HEAD
           : [{
             required: true,
             message: 'please input the value'
           }]}
+=======
+          : [{ required: true, message: 'please input the value' }]}
+>>>>>>> 4c0b3272b92a6f8c40846e5c7c55c07ec7b93425
       >
         <Select
           disabled={isDisable}>
@@ -74,10 +86,14 @@ const UserForm = (props: UserFormType, ref: any) => {
       <Form.Item
         name='roleId'
         label="角色"
+<<<<<<< HEAD
         rules={[{
           required: true,
           message: 'please input the value'
         }]}
+=======
+        rules={[{ required: true, message: 'please input the value' }]}
+>>>>>>> 4c0b3272b92a6f8c40846e5c7c55c07ec7b93425
       >
         <Select onChange={rolesChaneg}>
           {roleList.map(item => {

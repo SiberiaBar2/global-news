@@ -7,6 +7,16 @@ import { ResType } from 'views/constants'
 import UserForm from 'views/component/UserForm';
 
 const { confirm } = Modal;
+<<<<<<< HEAD
+=======
+
+// grade: 2
+// id: 3
+// key: "/user-manage/add"
+// rightId: 2
+// title: "添加用户"
+
+>>>>>>> 4c0b3272b92a6f8c40846e5c7c55c07ec7b93425
 export interface ListType {
   children: ListItemType[] | string
   grade: number
@@ -27,10 +37,17 @@ interface ColumnsType<T, U, K> {
 }
 
 interface RoleType {
+<<<<<<< HEAD
   id: number,
   roleName: string,
   roleType: number,
   rights: string[]
+=======
+  "id": number,
+  "roleName": string,
+  "roleType": number,
+  "rights": string[]
+>>>>>>> 4c0b3272b92a6f8c40846e5c7c55c07ec7b93425
 }
 
 interface RegionType {
