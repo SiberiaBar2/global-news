@@ -160,21 +160,21 @@ const UserList: React.FC<{}> = () => {
 
   const handeleSwitch = (record: ListType | ListItemType) => {
     console.warn('record', record);// 不加; 就报错是什么问题，没有调用签名
-    (record as ListItemType ).roleState = !(record as ListItemType ).roleState;
+    (record as ListItemType).roleState = !(record as ListItemType).roleState;
     setTableData([...tableData]);
     // 同步后端
-    axios.patch(`http://localhost:5000/users/${(record as ListItemType ).id}`, {
-      roleState: (record as ListItemType ).roleState
+    axios.patch(`http://localhost:5000/users/${(record as ListItemType).id}`, {
+      roleState: (record as ListItemType).roleState
     })
   };
 
   const handelUpdate = (record: ListType | ListItemType) => {
     setIsModalVisible(true);
-    console.log('userFormRef',userFormRef)
+    console.log('userFormRef', userFormRef)
     try {
       userFormRef.current.setFieldsValue(record);
     }
-    catch(err) {
+    catch (err) {
       console.error(err);
     }
   }
@@ -211,9 +211,9 @@ const UserList: React.FC<{}> = () => {
         render: (roleState, record) => {
           return (
             <Switch
-            checked={roleState}
-            onChange={() => handeleSwitch(record)}
-            disabled={(record as ListItemType).default}></Switch>
+              checked={roleState}
+              onChange={() => handeleSwitch(record)}
+              disabled={(record as ListItemType).default}></Switch>
           )
         }
       },
